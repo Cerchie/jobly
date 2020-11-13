@@ -1,0 +1,20 @@
+{
+  "name": "express-jobly",
+  "version": "1.0.0",
+  "description": "springboard exercise",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cerchie/jobly.git"
+  },
+  "author": "Cerchie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cerchie/jobly/issues"
+  },
+  "homepage": "https://github.com/Cerchie/jobly#readme"
+}
