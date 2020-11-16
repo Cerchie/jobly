@@ -16,5 +16,14 @@
   "bugs": {
     "url": "https://github.com/Cerchie/jobly/issues"
   },
-  "homepage": "https://github.com/Cerchie/jobly#readme"
+  "homepage": "https://github.com/Cerchie/jobly#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jest": "^26.6.3",
+    "jsonschema": "^1.4.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1",
+    "supertest": "^6.0.1"
+  }
 }
