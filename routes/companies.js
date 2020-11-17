@@ -1,14 +1,10 @@
 const express = require("express");
 const router = new express.Router();
-
-const { validate } = require("jsonschema");
-
-
-const jsonschema = require("jsonschema");
+const { validate } = require('jsonschema');
 const companySchema = require("../schemas/companies.json");
 
 const Company = require("../models/company");
-
+const ExpressError = require("../helpers/expressError")
 
 /** GET / => {companies: [company, ...]}  
  
@@ -27,6 +23,7 @@ respond with a 400 status and a message notifying that the parameters are incorr
 
 router.get("/", async function(req, res, next) {
     try {
+    
       const companies = await Company.findAll(req.query);
       return res.json({companies});
     }
@@ -36,5 +33,28 @@ router.get("/", async function(req, res, next) {
      
     }
   });
+
+/** POST /   companyData => {company: newCompany}  */
+
+router.post("/", async function (req, res, next) {
+    try {
+        // Validate req.body against our company schema:
+    const result = validate(req.body, companySchema);
+  
+    // If it's not valid...
+    if (!result.valid) {
+      //Collect all the errors in an array
+      const listOfErrors = result.errors.map(e => e.stack);
+      const err = new ExpressError(listOfErrors, 400);
+      //Call next with error
+      return next(err);
+    }
+      const company = await Company.create(req.body);
+      return res.status(201).json({ company });
+    } catch (err) {
+      return next(err);
+    }
+  });
+
 
   module.exports = router;

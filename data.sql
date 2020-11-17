@@ -1,4 +1,6 @@
+\c jobly
 
+DROP TABLE IF EXISTS companies;
 
 CREATE TABLE companies (
   handle text PRIMARY KEY,

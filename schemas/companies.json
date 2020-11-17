@@ -16,9 +16,6 @@
             }
         }
     ],
-    "required": [
-        "company"
-    ],
     "properties": {
         "company": {
             "$id": "#/properties/company",
@@ -37,10 +34,7 @@
             ],
             "required": [
                 "handle",
-                "name",
-                "num_employees",
-                "description",
-                "logo_url"
+                "name"
             ],
             "properties": {
                 "handle": {
@@ -94,8 +88,8 @@
                     ]
                 }
             },
-            "additionalProperties": true
+            "additionalProperties": false
         }
     },
-    "additionalProperties": true
+    "additionalProperties": false
 }
