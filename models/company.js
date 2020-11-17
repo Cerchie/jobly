@@ -20,7 +20,7 @@ class Company {
     
         if (data.min_employees) {
           queryValues.push(+data.min_employees);
-          whereExpressions.push(`(num_employees + 1) >= $${(queryValues.length)}`);
+          whereExpressions.push(`(num_employees) >= $${(queryValues.length)}`);
         }
     
         if (data.max_employees) {
