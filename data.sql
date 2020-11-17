@@ -1,4 +1,4 @@
-\c jobly
+\c jobly-test
 
 DROP TABLE IF EXISTS companies CASCADE;
 DROP TABLE IF EXISTS jobs;

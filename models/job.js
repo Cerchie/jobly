@@ -24,7 +24,7 @@ class Job {
     
         if (data.search) {
           queryValues.push(`%${data.search}%`);
-          whereExpressions.push(`name ILIKE $${queryValues.length}`);
+          whereExpressions.push(`title ILIKE $${queryValues.length}`);
         }
     
         if (whereExpressions.length > 0) {
@@ -34,7 +34,7 @@ class Job {
         // Finalize query and return results
     
         let finalQuery =
-          baseQuery + whereExpressions.join(" AND ") + " ORDER BY name";
+          baseQuery + whereExpressions.join(" AND ") + " ORDER BY title";
         const jobsRes = await db.query(finalQuery, queryValues);
         return jobsRes.rows;
       }

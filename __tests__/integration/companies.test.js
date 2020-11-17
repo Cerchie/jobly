@@ -100,7 +100,7 @@ describe("GET /companies", function () {
         // delete company first
         await request(app)
             .delete(`/companies/${company_handle}`)
-        const response = await request(app).delete(`/companies/${book_isbn}`);
+        const response = await request(app).delete(`/companies/${company_handle}`);
         expect(response.statusCode).toBe(404);
       });
     });

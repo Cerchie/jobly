@@ -1,0 +1,84 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "id": 1111,
+            "title": "Job title",
+            "salary": 3000,
+            "equity": 0.2,
+            "company_handle": "Pear",
+            "date_posted": "2020-02-02"
+        }
+    ],
+    "required": [
+        "id"
+    ],
+    "properties": {
+        "id": {
+            "$id": "#/properties/id",
+            "type": "integer",
+            "title": "The id schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                1111
+            ]
+        },
+        "title": {
+            "$id": "#/properties/title",
+            "type": "string",
+            "title": "The title schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Job title"
+            ]
+        },
+        "salary": {
+            "$id": "#/properties/salary",
+            "type": "integer",
+            "title": "The salary schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                3000
+            ]
+        },
+        "equity": {
+            "$id": "#/properties/equity",
+            "type": "number",
+            "title": "The equity schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0.0,
+            "examples": [
+                0.2
+            ]
+        },
+        "company_handle": {
+            "$id": "#/properties/company_handle",
+            "type": "string",
+            "title": "The company_handle schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Pear"
+            ]
+        },
+        "date_posted": {
+            "$id": "#/properties/date_posted",
+            "type": "string",
+            "title": "The date_posted schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "2020-02-02"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
