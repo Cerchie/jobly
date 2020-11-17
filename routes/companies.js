@@ -2,10 +2,10 @@ const express = require("express");
 const router = new express.Router();
 const { validate } = require('jsonschema');
 const companySchema = require("../schemas/companies.json");
-
+const partialUpdate = require("../helpers/partialUpdate")
 const Company = require("../models/company");
 const ExpressError = require("../helpers/expressError")
-
+const patchCompanySchema = require("../schemas/patchCompanies.json")
 /** GET / => {companies: [company, ...]}  
  
 SEARCH. If the query string parameter is passed, a filtered list of handles and names 
@@ -56,5 +56,46 @@ router.post("/", async function (req, res, next) {
     }
   });
 
+  /** GET/ companyData => {company: companyByHandle} */
+router.get("/:handle", async function (req,res,next){
+    try {
+        const handle = req.params.handle;
+        const company = await Company.findOne(handle);
+        return res.json({company})
+
+    } catch(err){
+        return next(err);
+    }
+});
+
+
+  /** PATCH/ companyData => {company: patchedCompany */
+  router.patch("/:handle", async function (req,res,next){
+    try {
+  // Validate req.body against our company schema:
+  const result = validate(req.body, patchCompanySchema);
+  
+  // If it's not valid...
+  if (!result.valid) {
+    //Collect all the errors in an array
+    const listOfErrors = result.errors.map(e => e.stack);
+    const err = new ExpressError(listOfErrors, 400);
+    //Call next with error
+    return next(err);
+  }
+    const company = await Company.update(req.params.handle, req.body);
+    return res.status(201).json({ company });
+
+    } catch(err){
+        return next(err);
+    }
+})
+
+router.delete("/:handle", async function (req,res,next){
+    try{    await Company.remove(req.params.handle);
+        return res.json({ message: "company deleted" }); } catch(err){
+        return next(err);
+    }
+})
 
   module.exports = router;

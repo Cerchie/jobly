@@ -33,8 +33,7 @@
                 }
             ],
             "required": [
-                "handle",
-                "name"
+                "handle"
             ],
             "properties": {
                 "handle": {

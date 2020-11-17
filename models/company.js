@@ -1,5 +1,5 @@
 const db = require("../db");
-
+const sqlForPartialUpdate = require("../helpers/partialUpdate.js")
 
 /** Collection of related methods for companies. */
 
@@ -95,34 +95,21 @@ handle, name, num_employees, description, logo_url}
        * */
     
       static async update(handle, data) {
-        const result = await db.query(
-          `UPDATE companies SET 
-                name=($1),
-                num_employees=($2),
-                description=($3),
-                logo_url=($4),
-                WHERE handle=$5
-            RETURNING handle,
-                      name,
-                      num_employees,
-                      description,
-                      logo_url`,
-          [
-            data.name,
-            data.num_employees,
-            data.description,
-            data.logo_url,
-            handle
-          ]
+        let { query, values } = sqlForPartialUpdate(
+          "companies",
+          data,
+          "handle",
+          handle
         );
+            //console.log(query,values) = UPDATE companies SET  WHERE handle=$1 RETURNING * [ 'Pear' ]
+        const result = await db.query(query, values);
+        const company = result.rows[0];
     
-        if (result.rows.length === 0) {
-          throw { message: `There is no company with an handle '${handle}`, status: 404 }
+        if (!company) {
+          throw new ExpressError(`There exists no company '${handle}`, 404);
         }
-    
-        return result.rows[0];
+        return company;
       }
-    
       /** remove company with matching handle. Returns undefined. */
     
       static async remove(handle) {

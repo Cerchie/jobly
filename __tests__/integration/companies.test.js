@@ -34,7 +34,6 @@ describe("GET /companies", function () {
       const companies = response.body.companies;
       expect(companies).toHaveLength(1);
       expect(companies[0]).toHaveProperty("handle");
-      expect(companies[0]).toHaveProperty("logo_url");
     });
   });
   
@@ -55,6 +54,20 @@ describe("GET /companies", function () {
     
     }); });
 
+    describe("GET /companies/:handle",  function () {
+      test("Gets a single company by its handle", async function () {
+        const response = await request(app)
+            .get(`/companies/${company_handle}`)
+        expect(response.body.company).toHaveProperty("handle");
+        expect(response.body.company.handle).toBe(company_handle);
+      });
+    
+      test("Responds with 404 if can't find company in question", async function () {
+        const response = await request(app)
+            .get(`/companies/'palantir'`)
+        expect(response.statusCode).toBe(404);
+      });
+    });
 
 afterEach(async function () {
   await db.query("DELETE FROM COMPANIES");
