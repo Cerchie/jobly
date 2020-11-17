@@ -53,7 +53,7 @@ describe("GET /companies", function () {
       expect(response.body.company).toHaveProperty("handle");
     
     }); });
-
+//testing get by handle route
     describe("GET /companies/:handle",  function () {
       test("Gets a single company by its handle", async function () {
         const response = await request(app)
@@ -66,6 +66,50 @@ describe("GET /companies", function () {
         const response = await request(app)
             .get(`/companies/'palantir'`)
         expect(response.statusCode).toBe(404);
+      });
+    });
+///testing put route 
+    describe("PUT /companies/:handle", function () {
+      test("Updates a single company", async function () {
+        const response = await request(app)
+            .put(`/companies/${company_handle}`)
+            .send({
+              handle: "Pear",
+              name: "Pear Corp",
+              num_employees: 52,
+              logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+            });
+        expect(response.body.company).toHaveProperty("handle");
+        expect(response.body.company.name).toBe("Pear Corp");
+      });
+    
+      test("Prevents a bad company update", async function () {
+        const response = await request(app)
+            .put(`/companies/${company_handle}`)
+            .send({
+              handle: "Pear",
+              badField: "do not add me",
+              name: "Pear Corp",
+              num_employees: 52,
+              logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+            });
+        expect(response.statusCode).toBe(400);
+      });
+    
+      test("Responds 404 if can't find company in question", async function () {
+        // delete company first
+        await request(app)
+            .delete(`/companies/${company_handle}`)
+        const response = await request(app).delete(`/companies/${book_isbn}`);
+        expect(response.statusCode).toBe(404);
+      });
+    });
+///testing delete route
+    describe("DELETE /companies/:handle", function () {
+      test("Deletes a single company by handle", async function () {
+        const response = await request(app)
+            .delete(`/companies/${company_handle}`)
+        expect(response.body).toEqual({message: "company deleted"});
       });
     });
 

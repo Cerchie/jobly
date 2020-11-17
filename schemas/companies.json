@@ -6,90 +6,71 @@
     "description": "The root schema comprises the entire JSON document.",
     "default": {},
     "examples": [
-        {
-            "company": {
-                "handle": "Pear",
-                "name": "Pear Corporation",
-                "num_employees": 34,
-                "description": "Sends French pears to unsuspecting relatives",
-                "logo_url": "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
-            }
+      {
+        "company": {
+          "handle": "Pear",
+          "name": "Pear Corporation",
+          "num_employees": 34,
+          "description": "Sends French pears to unsuspecting relatives",
+          "logo_url": "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
         }
+      }
     ],
     "properties": {
-        "company": {
-            "$id": "#/properties/company",
-            "type": "object",
-            "title": "The company schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": {},
-            "examples": [
-                {
-                    "handle": "Pear",
-                    "name": "Pear Corporation",
-                    "num_employees": 34,
-                    "description": "Sends French pears to unsuspecting relatives",
-                    "logo_url": "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
-                }
-            ],
-            "required": [
-                "handle",
-                "name"
-            ],
-            "properties": {
-                "handle": {
-                    "$id": "#/properties/company/properties/handle",
-                    "type": "string",
-                    "title": "The handle schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "Pear"
-                    ]
-                },
-                "name": {
-                    "$id": "#/properties/company/properties/name",
-                    "type": "string",
-                    "title": "The name schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "Pear Corporation"
-                    ]
-                },
-                "num_employees": {
-                    "$id": "#/properties/company/properties/num_employees",
-                    "type": "integer",
-                    "title": "The num_employees schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": 0,
-                    "examples": [
-                        34
-                    ]
-                },
-                "description": {
-                    "$id": "#/properties/company/properties/description",
-                    "type": "string",
-                    "title": "The description schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "Sends French pears to unsuspecting relatives"
-                    ]
-                },
-                "logo_url": {
-                    "$id": "#/properties/company/properties/logo_url",
-                    "type": "string",
-                    "title": "The logo_url schema",
-                    "description": "An explanation about the purpose of this instance.",
-                    "default": "",
-                    "examples": [
-                        "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
-                    ]
-                }
-            },
-            "additionalProperties": true
-        }
+      "handle": {
+        "$id": "#/properties/company/properties/handle",
+        "type": "string",
+        "title": "The handle schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "Pear"
+        ]
+      },
+      "name": {
+        "$id": "#/properties/company/properties/name",
+        "type": "string",
+        "title": "The name schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "Pear Corporation"
+        ]
+      },
+      "num_employees": {
+        "$id": "#/properties/company/properties/num_employees",
+        "type": "integer",
+        "title": "The num_employees schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": 0,
+        "examples": [
+          34
+        ]
+      },
+      "description": {
+        "$id": "#/properties/company/properties/description",
+        "type": "string",
+        "title": "The description schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "Sends French pears to unsuspecting relatives"
+        ]
+      },
+      "logo_url": {
+        "$id": "#/properties/company/properties/logo_url",
+        "type": "string",
+        "title": "The logo_url schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
+        ]
+      }
     },
-    "additionalProperties": true
-}
+    "required": [
+      "name",
+      "handle"
+    ],
+    "additionalProperties": false
+  }
