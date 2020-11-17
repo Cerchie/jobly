@@ -42,8 +42,8 @@ router.get("/", async function(req, res, next) {
 
 router.post("/", async function (req, res, next) {
     try {
-        // Validate req.body against our company schema:
-    const result = validate(req.body, companySchema);
+        // Validate req.body against our job schema:
+    const result = validate(req.body, jobSchema);
   
     // If it's not valid...
     if (!result.valid) {
@@ -53,7 +53,7 @@ router.post("/", async function (req, res, next) {
       //Call next with error
       return next(err);
     }
-      const company = await Company.create(req.body);
+      const company = await Job.create(req.body);
       return res.status(201).json({ company });
     } catch (err) {
       return next(err);
@@ -94,10 +94,10 @@ router.get("/:handle", async function (req,res,next){
         return next(err);
     }
 })
-
-router.delete("/:handle", async function (req,res,next){
-    try{    await Company.remove(req.params.handle);
-        return res.json({ message: "company deleted" }); } catch(err){
+// DELETE / jobId => {"message":"job deleted"}
+router.delete("/:id", async function (req,res,next){
+    try {    await Job.remove(req.params.id);
+        return res.json({ message: "job deleted" }); } catch(err){
         return next(err);
     }
 })

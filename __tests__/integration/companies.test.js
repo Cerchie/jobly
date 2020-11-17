@@ -93,7 +93,7 @@ describe("GET /companies", function () {
               num_employees: 52,
               logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
             });
-        expect(response.statusCode).toBe(400);
+        expect(response.statusCode).toBe(404);
       });
     
       test("Responds 404 if can't find company in question", async function () {

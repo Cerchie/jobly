@@ -108,7 +108,7 @@ class Job {
       }
       /** remove job with matching handle. Returns undefined. */
     
-      static async remove(handle) {
+      static async remove(id) {
         const result = await db.query(
           `DELETE FROM jobs 
              WHERE id = $1 
