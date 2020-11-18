@@ -18,7 +18,6 @@ const {SECRET_KEY} = require("../config");
           let {username, password} = req.body;
           if (await User.authenticate(username, password)) {
             let token = jwt.sign({username}, SECRET_KEY);
-            User.updateLoginTimestamp(username);
             return res.json({token});
           } else {
             throw new ExpressError("Invalid username/password", 400);

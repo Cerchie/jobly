@@ -124,17 +124,7 @@ static async authenticate(username, password) {
   return false;
 }
 }
-  /** Update last_login_at for user */
 
-  static async updateLoginTimestamp(username) { 
-  
-    const result = await db.query(
-      "UPDATE users SET last_login_at = current_timestamp WHERE username = $1",
-      [username]);
-    if (!result.rows[0]) {
-     throw new ExpressError(`${username} does not exist`, 404)
-  }  
-}
 } 
 
 module.exports = User;

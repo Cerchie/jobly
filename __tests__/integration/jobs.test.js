@@ -9,7 +9,7 @@ const {
   afterEachHook,
   beforeEachHook,
   afterAllHook
-} = require("./jest.config");
+} = require("./config");
 
 beforeEach(async () => {
   await beforeEachHook(TEST_DATA);
@@ -126,10 +126,10 @@ describe("PATCH /jobs/:id", async function () {
         .send({
           _token: TEST_DATA.userToken, cactus: false
         });
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).toBe(400);
   });
 
-  test("Responds with a 401 if it cannot find the job in question", async function () {
+  test("Responds with a 404 if it cannot find the job in question", async function () {
     // delete job first
     await request(app)
         .delete(`/jobs/${TEST_DATA.jobId}`).send({
@@ -140,7 +140,7 @@ describe("PATCH /jobs/:id", async function () {
         .send({
           _token: TEST_DATA.userToken, title: "instructor"
         });
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).toBe(404);
   });
 });
 
@@ -149,17 +149,17 @@ describe("DELETE /jobs/:id", async function () {
   test("Deletes a single a job", async function () {
     const response = await request(app)
         .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
-    expect(response.body).toEqual({message: "You must be an admin to access"});
+    expect(response.body).toEqual({message: "Job deleted"});
   });
 
 
-  test("Responds with a 401 if it cannot find the job in question", async function () {
+  test("Responds with a 404 if it cannot find the job in question", async function () {
     // delete job first
     await request(app)
         .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
     const response = await request(app)
         .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).toBe(404);
   });
 });
 
