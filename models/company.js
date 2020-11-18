@@ -58,8 +58,17 @@ class Company {
         if (companyRes.rows.length === 0) {
           throw { message: `There is no company with handle '${handle}`, status: 404 }
         }
+        const company = companyRes.rows[0];
+        const jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+                FROM jobs 
+                WHERE company_handle = $1`,
+          [handle]
+        );
     
-        return companyRes.rows[0];
+        company.jobs = jobsRes.rows;
+    
+        return company;
       }
 
       /** create company in database from data, return company data:

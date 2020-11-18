@@ -6,12 +6,14 @@ app.use(express.json());
 
 const ExpressError = require("./helpers/expressError");
 const companyRoutes = require("./routes/companies")
+const userRoutes = require("./routes/users")
 const jobRoutes = require("./routes/jobs")
 const morgan = require("morgan");
 
 
 app.use("/companies", companyRoutes)
 app.use("/jobs", jobRoutes)
+app.use("/users", userRoutes)
 
 
 
