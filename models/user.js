@@ -39,7 +39,7 @@ class User {
         if (userRes.rows.length === 0) {
           throw { message: `There is no user with username '${username}`, status: 404 }
         }
-        const user = useryRes.rows[0];
+        const user = userRes.rows[0];
     
         return user;
       }

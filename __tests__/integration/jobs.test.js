@@ -56,11 +56,11 @@ describe("POST /jobs",function () {
         .post(`/jobs`)
         .send({
           id: 4444,
-          title: "title4",
+          title: 'title4',
           salary: 888,
           equity: 0.09,
-          company_handle: "Pear",
-          date_posted: "2020-03-03"
+          company_handle: 'Pear',
+          date_posted: '2020-03-03'
         });
         
     expect(response.statusCode).toBe(201);
@@ -92,7 +92,7 @@ describe("POST /jobs",function () {
           .put(`/jobs/${job_id}`)
           .send({
             id: 991,
-            title: "Pear Corp",
+            title: 'Pear Corp',
             salary: 52,
             equity: .2,
             company_handle: 'Splash',

@@ -45,13 +45,13 @@ router.post("/", async function (req, res, next) {
     }
   });
 
-  /** GET/ companyData => {company: companyByHandle} */
-router.get("/:handle", async function (req,res,next){
+  /** GET/ userData => usery: userByUsername} */
+router.get("/:username", async function (req,res,next){
     try {
-        const handle = req.params.handle;
-        const company = await Company.findOne(handle);
+        const username = req.params.username;
+        const user = await User.findOne(username);
         
-        return res.json({company})
+        return res.json({user})
 
     } catch(err){
         return next(err);
@@ -59,11 +59,11 @@ router.get("/:handle", async function (req,res,next){
 });
 
 
-  /** PATCH/ companyData => {company: patchedCompany} */
-  router.patch("/:handle", async function (req,res,next){
+  /** PATCH/ userData => {user: patcheduser} */
+  router.patch("/:username", async function (req,res,next){
     try {
-  // Validate req.body against our company schema:
-  const result = validate(req.body, patchCompanySchema);
+  // Validate req.body against our user schema:
+  const result = validate(req.body, patchUserSchema);
   
   // If it's not valid...
   if (!result.valid) {
@@ -73,8 +73,8 @@ router.get("/:handle", async function (req,res,next){
     //Call next with error
     return next(err);
   }
-    const company = await Company.update(req.params.handle, req.body);
-    return res.status(201).json({ company });
+    const user = await User.update(req.params.username, req.body);
+    return res.status(201).json({ user });
 
     } catch(err){
         return next(err);

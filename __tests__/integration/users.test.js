@@ -1,4 +1,4 @@
-/** Integration tests for companies routes */
+/** Integration tests for users routes */
 
 process.env.NODE_ENV = "test"
 
@@ -31,7 +31,7 @@ beforeEach(async () => {
 });
 
 describe("GET /user", function () {
-    test("Gets a list of 1 company", async function () {
+    test("Gets a list of 1 user", async function () {
       const response = await request(app).get(`/users`);
       const user = response.body.user;
       expect(user).toHaveLength(1);
@@ -39,84 +39,85 @@ describe("GET /user", function () {
     });
   });
   
-  describe("POST /companies",function () {
-    test("Creates a new company", async function () {
+  describe("POST /users",function () {
+    test("Creates a new user", async function () {
       const response = await request(app)
-          .post(`/companies`)
+          .post(`/users`)
           .send({
-            handle: 'Yummy',
-            name: "Yummy Co.",
-            num_employees: 888,
-            description: "lollipop distribution centers",
-            logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+            username: 'Yummy123',
+            password: 'Yummy2451Coajksvf.',
+            first_name:'first',
+            last_name: 'last',
+            email: 'a@gmail.com',
+            photo_url: 'none',
+            is_admin: 'false'
           });
           
       expect(response.statusCode).toBe(201);
-      expect(response.body.company).toHaveProperty("handle");
+      expect(response.body.user).toHaveProperty("username");
     
     }); });
-//testing get by handle route
-    describe("GET /companies/:handle",  function () {
-      test("Gets a single company by its handle", async function () {
+//testing get by username route
+    describe("GET /users/:username",  function () {
+      test("Gets a single user by its username", async function () {
         const response = await request(app)
-            .get(`/companies/${company_handle}`)
-        expect(response.body.company).toHaveProperty("handle");
-        expect(response.body.company.handle).toBe(company_handle);
+            .get(`/users/${user_username}`)
+        expect(response.body.user).toHaveProperty("username");
+        expect(response.body.user.username).toBe(user_username);
       });
     
-      test("Responds with 404 if can't find company in question", async function () {
+      test("Responds with 404 if can't find user in question", async function () {
         const response = await request(app)
-            .get(`/companies/'palantir'`)
+            .get(`/users/'palantir'`)
         expect(response.statusCode).toBe(404);
       });
     });
 ///testing patch route 
-    describe("PATCH /companies/:handle", function () {
-      test("Updates a single company", async function () {
+    describe("PATCH /users/:username", function () {
+      test("Updates a single user", async function () {
         const response = await request(app)
-            .put(`/companies/${company_handle}`)
+            .put(`/users/${user_username}`)
             .send({
-              handle: "Pear",
-              name: "Pear Corp",
-              num_employees: 52,
-              logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+              username: 'Pear',
+              password: 'PearafCorp',
+              first_name: '52',
+              last_name: 'h25',
+              email: '5@gmail.com',
+              is_admin: 'true'
             });
-        expect(response.body.company).toHaveProperty("handle");
-        expect(response.body.company.name).toBe("Pear Corp");
+        expect(response.body.user).toHaveProperty('username');
+        expect(response.body.user.username).toBe('Pear');
       });
     
-      test("Prevents a bad company update", async function () {
+      test("Prevents a bad user update", async function () {
         const response = await request(app)
-            .put(`/companies/${company_handle}`)
+            .put(`/users/${user_username}`)
             .send({
-              handle: "Pear",
-              badField: "do not add me",
-              name: "Pear Corp",
-              num_employees: 52,
-              logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+              username: 'Pear',
+              badField: "do not add me"
             });
         expect(response.statusCode).toBe(404);
       });
     
-      test("Responds 404 if can't find company in question", async function () {
-        // delete company first
+      test("Responds 404 if can't find user in question", async function () {
+        // delete userfirst
         await request(app)
-            .delete(`/companies/${company_handle}`)
-        const response = await request(app).delete(`/companies/${company_handle}`);
+            .delete(`/users/${user_username}`)
+        const response = await request(app).delete(`/users/${user_username}`);
         expect(response.statusCode).toBe(404);
       });
     });
 ///testing delete route
-    describe("DELETE /companies/:handle", function () {
-      test("Deletes a single company by handle", async function () {
+    describe("DELETE /users/:username", function () {
+      test("Deletes a single user by username", async function () {
         const response = await request(app)
-            .delete(`/companies/${company_handle}`)
-        expect(response.body).toEqual({message: "company deleted"});
+            .delete(`/users/${user_username}`)
+        expect(response.body).toEqual({message: "user deleted"});
       });
     });
 
 afterEach(async function () {
-  await db.query("DELETE FROM COMPANIES");
+  await db.query("DELETE FROM USERS");
 });
 
 

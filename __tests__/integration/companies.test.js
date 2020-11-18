@@ -43,10 +43,10 @@ describe("GET /companies", function () {
           .post(`/companies`)
           .send({
             handle: 'Yummy',
-            name: "Yummy Co.",
+            name: 'Yummy Co.',
             num_employees: 888,
-            description: "lollipop distribution centers",
-            logo_url: "https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png"
+            description: 'lollipop distribution centers',
+            logo_url: 'https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png'
           });
           
       expect(response.statusCode).toBe(201);
