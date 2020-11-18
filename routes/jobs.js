@@ -60,24 +60,23 @@ router.post("/", async function (req, res, next) {
     }
   });
 
-  /** GET/ companyData => {company: companyByHandle} */
-router.get("/:handle", async function (req,res,next){
+  /** GET/ jobData => {job: jobByID} */
+  router.get("/:id", async function (req,res,next){
     try {
-        const handle = req.params.handle;
-        const company = await Company.findOne(handle);
-        return res.json({company})
+        const id = req.params.id;
+        const job = await Job.findOne(id);
+        return res.json({job})
 
     } catch(err){
         return next(err);
     }
 });
 
-
-  /** PATCH/ companyData => {company: patchedCompany */
-  router.patch("/:handle", async function (req,res,next){
+  /** PATCH/ jobData => {job: patchedJob */
+  router.patch("/:id", async function (req,res,next){
     try {
   // Validate req.body against our company schema:
-  const result = validate(req.body, patchCompanySchema);
+  const result = validate(req.body, patchJobSchema);
   
   // If it's not valid...
   if (!result.valid) {
@@ -87,8 +86,8 @@ router.get("/:handle", async function (req,res,next){
     //Call next with error
     return next(err);
   }
-    const company = await Company.update(req.params.handle, req.body);
-    return res.status(201).json({ company });
+    const job = await Job.update(req.params.id, req.body);
+    return res.status(201).json({ job });
 
     } catch(err){
         return next(err);

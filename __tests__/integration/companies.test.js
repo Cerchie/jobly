@@ -68,8 +68,8 @@ describe("GET /companies", function () {
         expect(response.statusCode).toBe(404);
       });
     });
-///testing put route 
-    describe("PUT /companies/:handle", function () {
+///testing patch route 
+    describe("PATCH /companies/:handle", function () {
       test("Updates a single company", async function () {
         const response = await request(app)
             .put(`/companies/${company_handle}`)

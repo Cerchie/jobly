@@ -67,7 +67,7 @@ class Job {
     
       static async create(data) {
         const result = await db.query(
-          `INSERT INTO jobs (id, title,salary, equity, company_handle, date_posted) 
+          `INSERT INTO jobs (id, title, salary, equity, company_handle, date_posted) 
              VALUES ($1, $2, $3, $4, $5, $6) 
              RETURNING  id, title, salary, equity, company_handle, date_posted`,
           [
@@ -92,7 +92,7 @@ class Job {
     
       static async update(id, data) {
         let { query, values } = sqlForPartialUpdate(
-          "companies",
+          "jobs",
           data,
           "id",
           id
