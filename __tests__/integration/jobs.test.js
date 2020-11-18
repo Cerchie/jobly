@@ -1,137 +1,174 @@
-/** Integration tests for companies routes */
-
-process.env.NODE_ENV = "test"
-
+// npm packages
 const request = require("supertest");
 
-
+// app imports
 const app = require("../../app");
-const db = require("../../db");
 
-
-// id of sample job
-let job_id;
-
+const {
+  TEST_DATA,
+  afterEachHook,
+  beforeEachHook,
+  afterAllHook
+} = require("./jest.config");
 
 beforeEach(async () => {
-  let company = await db.query(`
-    INSERT INTO 
-      companies (handle, name, num_employees, description, logo_url)   
-      VALUES (
-        'Splash', 
-        'Splash Zone', 
-         100, 
-        'Inflatable pool company', 
-        'https://media.keyshot.com/uploads/2018/10/keyshot-icon-256.png')
-      RETURNING handle`);
-
-  let result = await db.query(`
-  INSERT INTO 
-  jobs (id, title, salary, equity, company_handle, date_posted)
-  VALUES (    
-    991,
-    'Pear Pusher',
-    34000,
-    0.4,
-    ${company.rows[0].handle},
-    '2020-09-09'
-  )`);
-
-  job_id = result.rows[0].id
+  await beforeEachHook(TEST_DATA);
 });
-///testing get route
-describe("GET /jobs", function () {
-    test("Gets a list of jobs", async function () {
-      const response = await request(app).get(`/jobs`);
-      const jobs = response.body.jobs;
-      expect(jobs[0]).toHaveProperty("id");
-    });
-  });
 
-////testing post route
 
-describe("POST /jobs",function () {
+describe("POST /jobs", async function () {
   test("Creates a new job", async function () {
     const response = await request(app)
         .post(`/jobs`)
         .send({
-          id: 4444,
-          title: 'title4',
-          salary: 888,
-          equity: 0.09,
-          company_handle: 'Pear',
-          date_posted: '2020-03-03'
+          _token: TEST_DATA.userToken,
+          company_handle: TEST_DATA.currentCompany.handle,
+          title: "Software Engineer in Test",
+          salary: 1000000,
+          equity: 0.2
         });
-        
     expect(response.statusCode).toBe(201);
     expect(response.body.job).toHaveProperty("id");
-  
-  }); });
-
-
-  //testing get by id route
-  describe("GET /jobs/:id",  function () {
-    test("Gets a single job by its id", async function () {
-      const response = await request(app)
-          .get(`/jobs/${job_handle}`)
-      expect(response.body.job).toHaveProperty("id");
-      expect(response.body.job.id).toBe(job_id);
-    });
-  
-    test("Responds with 404 if can't find job in question", async function () {
-      const response = await request(app)
-          .get(`/jobs/'palantir'`)
-      expect(response.statusCode).toBe(404);
-    });
   });
 
-///testing patch route 
-  describe("PATCH /jobs/:handle", function () {
-    test("Updates a single job", async function () {
-      const response = await request(app)
-          .put(`/jobs/${job_id}`)
-          .send({
-            id: 991,
-            title: 'Pear Corp',
-            salary: 52,
-            equity: .2,
-            company_handle: 'Splash',
-            date_posted: "2020-02-02"
-          });
-      expect(response.body.job).toHaveProperty("id");
-      expect(response.body.job.title).toBe("Pear Corp");
-    });
-  
-    test("Prevents a bad job update", async function () {
-      const response = await request(app)
-          .put(`/companies/${job_id}`)
-          .send({
-            id: 991,
-            badField: "do not add me",
-            title: "Pear Corp",
-            salary: 52,
-            equity: .2,
-            company_handle: 'Splash',
-            date_posted: "2020-02-02"
-          });
-      expect(response.statusCode).toBe(404);
-    });
-
-  ///testing delete route
-  describe("DELETE /jobs/:id", function () {
-    test("Deletes a single job by handle", async function () {
-      const response = await request(app)
-          .delete(`/companies/${job_id}`)
-      expect(response.body).toEqual({message: "job deleted"});
-    });
+  test("Prevents creating a job without required title field", async function () {
+    const response = await request(app)
+        .post(`/jobs`)
+        .send({
+          _token: TEST_DATA.userToken,
+          salary: 1000000,
+          equity: 0.2,
+          company_handle: TEST_DATA.currentCompany.handle
+        });
+    expect(response.statusCode).toBe(400);
   });
+});
+
+
+describe("GET /jobs", async function () {
+  test("Gets a list of 1 job", async function () {
+    const response = await request(app).get(`/jobs`);
+    const jobs = response.body.jobs;
+    expect(jobs).toHaveLength(1);
+    expect(jobs[0]).toHaveProperty("company_handle");
+    expect(jobs[0]).toHaveProperty("title");
+  });
+
+  test("Has working search", async function () {
+    await request(app)
+        .post(`/jobs`)
+        .send({
+          title: "Software Engineer in Test",
+          salary: 1000000,
+          equity: 0.2,
+          company_handle: TEST_DATA.currentCompany.handle,
+          _token: TEST_DATA.userToken
+        });
+
+    await request(app)
+        .post(`/jobs`)
+        .send({
+          title: "Web Dev",
+          salary: 1000000,
+          company_handle: TEST_DATA.currentCompany.handle,
+          _token: TEST_DATA.userToken
+        });
+
+    const response = await request(app)
+        .get("/jobs?search=web+dev")
+        .send({_token: TEST_DATA.userToken});
+    expect(response.body.jobs).toHaveLength(1);
+    expect(response.body.jobs[0]).toHaveProperty("company_handle");
+    expect(response.body.jobs[0]).toHaveProperty("title");
+  });
+});
+
+
+describe("GET /jobs/:id", async function () {
+  test("Gets a single a job", async function () {
+    const response = await request(app).get(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken});
+    expect(response.body.job).toHaveProperty("id");
+
+    expect(response.body.job.id).toBe(TEST_DATA.jobId);
+  });
+
+  test("Responds with a 404 if it cannot find the job in question", async function () {
+    const response = await request(app)
+        .get(`/jobs/999`).send({_token: TEST_DATA.userToken})
+    expect(response.statusCode).toBe(404);
+  });
+});
+
+
+describe("PATCH /jobs/:id", async function () {
+  test("Updates a single a job's title", async function () {
+    const response = await request(app)
+        .patch(`/jobs/${TEST_DATA.jobId}`)
+        .send({title: "xkcd", _token: TEST_DATA.userToken});
+    expect(response.body.job).toHaveProperty("id");
+
+    expect(response.body.job.title).toBe("xkcd");
+    expect(response.body.job.id).not.toBe(null);
+  });
+
+  test("Updates a single a job's equity", async function () {
+    const response = await request(app)
+        .patch(`/jobs/${TEST_DATA.jobId}`)
+        .send({
+          _token: TEST_DATA.userToken, equity: 0.5
+        });
+    expect(response.body.job).toHaveProperty("id");
+  });
+
+  test("Prevents a bad job update", async function () {
+    const response = await request(app)
+        .patch(`/jobs/${TEST_DATA.jobId}`)
+        .send({
+          _token: TEST_DATA.userToken, cactus: false
+        });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Responds with a 401 if it cannot find the job in question", async function () {
+    // delete job first
+    await request(app)
+        .delete(`/jobs/${TEST_DATA.jobId}`).send({
+          _token: TEST_DATA.userToken, title: "instructor"
+        });
+    const response = await request(app)
+        .patch(`/jobs/${TEST_DATA.jobId}`)
+        .send({
+          _token: TEST_DATA.userToken, title: "instructor"
+        });
+    expect(response.statusCode).toBe(401);
+  });
+});
+
+
+describe("DELETE /jobs/:id", async function () {
+  test("Deletes a single a job", async function () {
+    const response = await request(app)
+        .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
+    expect(response.body).toEqual({message: "You must be an admin to access"});
+  });
+
+
+  test("Responds with a 401 if it cannot find the job in question", async function () {
+    // delete job first
+    await request(app)
+        .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
+    const response = await request(app)
+        .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
+    expect(response.statusCode).toBe(401);
+  });
+});
 
 
 afterEach(async function () {
-  await db.query("DELETE FROM COMPANIES");
+  await afterEachHook();
 });
 
 
 afterAll(async function () {
-  await db.end()
-}); });
+  await afterAllHook();
+});

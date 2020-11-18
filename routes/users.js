@@ -9,7 +9,9 @@ const patchCompanySchema = require("../schemas/patchCompanies.json")
 const User = require("../models/user")
 const patchUserSchema = require("../schemas/patchUsers.json")
 const userSchema = require("../schemas/users.json")
-
+const {authRequired, adminRequired, ensureCorrectUser} = require("../middleware/auth");
+const {SECRET_KEY} = require("../config");
+const jwt = require("jsonwebtoken");
 router.get("/", async function(req, res, next) {
     try {
     
@@ -39,13 +41,15 @@ router.post("/", async function (req, res, next) {
       return next(err);
     }
       const user = await User.create(req.body);
-      return res.status(201).json({ user });
+      username = user.username;
+      let token = jwt.sign({username}, SECRET_KEY);
+      return res.status(201).json({ user, token });
     } catch (err) {
       return next(err);
     }
   });
 
-  /** GET/ userData => usery: userByUsername} */
+  /** GET/ userData => user: userByUsername} */
 router.get("/:username", async function (req,res,next){
     try {
         const username = req.params.username;
@@ -60,7 +64,7 @@ router.get("/:username", async function (req,res,next){
 
 
   /** PATCH/ userData => {user: patcheduser} */
-  router.patch("/:username", async function (req,res,next){
+  router.patch("/:username", ensureCorrectUser, async function (req,res,next){
     try {
   // Validate req.body against our user schema:
   const result = validate(req.body, patchUserSchema);
@@ -81,7 +85,7 @@ router.get("/:username", async function (req,res,next){
     }
 })
 
-router.delete("/:id", async function (req,res,next){
+router.delete("/:id", ensureCorrectUser, async function (req,res,next){
     try{    await User.remove(req.params.id);
         return res.json({ message: "user deleted" }); } 
         catch(err){

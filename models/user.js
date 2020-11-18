@@ -1,6 +1,6 @@
 const db = require("../db");
 const sqlForPartialUpdate = require("../helpers/partialUpdate.js")
-
+const bcrypt = require("bcrypt");
 /** Collection of related methods for users. */
 
 class User {
@@ -54,9 +54,9 @@ class User {
     
       static async create(data) {
         const result = await db.query(
-          `INSERT INTO users (username, password, first_name, last_name, email, photo_url, is_admin}) 
+          `INSERT INTO users (username, password, first_name, last_name, email, photo_url, is_admin) 
              VALUES ($1, $2, $3, $4, $5, $6, $7) 
-             RETURNING username, password, first_name, last_name, email, photo_url, is_admin}`,
+             RETURNING username, password, first_name, last_name, email, photo_url, is_admin`,
           [
             data.username,
             data.password,
@@ -107,6 +107,34 @@ class User {
           throw { message: `There is no user with the username '${username}`, status: 404 }
         }
       }
+
+/** Authenticate: is this username/password valid? Returns boolean. */
+
+static async authenticate(username, password) {
+   
+  const result = await db.query(
+    "SELECT password FROM users WHERE username = $1",
+    [username]);
+  let user = result.rows[0];
+  if (user) {
+    if (await bcrypt.compare(password, user.password) === true) {
+      return true;
+    }
+} else {
+  return false;
+}
+}
+  /** Update last_login_at for user */
+
+  static async updateLoginTimestamp(username) { 
+  
+    const result = await db.query(
+      "UPDATE users SET last_login_at = current_timestamp WHERE username = $1",
+      [username]);
+    if (!result.rows[0]) {
+     throw new ExpressError(`${username} does not exist`, 404)
+  }  
+}
 } 
 
 module.exports = User;
