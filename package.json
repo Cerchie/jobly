@@ -16,6 +16,12 @@
   "bugs": {
     "url": "https://github.com/Cerchie/jobly/issues"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+    "/node_modules/",
+    "config.js"
+    ]
+    },
   "homepage": "https://github.com/Cerchie/jobly#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
