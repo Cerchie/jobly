@@ -25,7 +25,7 @@ company handles should be displayed that have an equity greater than the value o
 It should return JSON of {jobs: [job, ...]}
 */
 
-router.get("/", async function(req, res, next) {
+router.get("/", authRequired, async function(req, res, next) {
     try {
     
       const jobs = await Job.findAll(req.query);
@@ -40,7 +40,7 @@ router.get("/", async function(req, res, next) {
 
 /** POST /   jobData => {job: newJob}  */
 
-router.post("/", async function (req, res, next) {
+router.post("/", adminRequired, async function (req, res, next) {
     try {
         // Validate req.body against our job schema:
     const result = validate(req.body, jobSchema);
@@ -61,7 +61,7 @@ router.post("/", async function (req, res, next) {
   });
 
   /** GET/ jobData => {job: jobByID} */
-  router.get("/:id", async function (req,res,next){
+  router.get("/:id", authRequired, async function (req,res,next){
     try {
         const id = req.params.id;
         const job = await Job.findOne(id);
@@ -73,7 +73,7 @@ router.post("/", async function (req, res, next) {
 });
 
   /** PATCH/ jobData => {job: patchedJob */
-  router.patch("/:id", async function (req,res,next){
+  router.patch("/:id", adminRequired, async function (req,res,next){
     try {
   // Validate req.body against our company schema:
   const result = validate(req.body, patchJobSchema);
@@ -94,7 +94,7 @@ router.post("/", async function (req, res, next) {
     }
 })
 // DELETE / jobId => {"message":"job deleted"}
-router.delete("/:id", async function (req,res,next){
+router.delete("/:id", adminRequired, async function (req,res,next){
     try {    await Job.remove(req.params.id);
         return res.json({ message: "job deleted" }); } catch(err){
         return next(err);

@@ -1,4 +1,4 @@
-/ npm packages
+// npm packages
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
