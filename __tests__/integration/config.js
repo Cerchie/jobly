@@ -45,7 +45,7 @@ async function beforeEachHook(TEST_DATA) {
     TEST_DATA.currentCompany = result.rows[0];
 
     const newJob = await db.query(
-      "INSERT INTO jobs (title, salary, company_handle) VALUES ('Software Engineer', 100000, $1) RETURNING *",
+      "INSERT INTO jobs (id, title, salary, company_handle) VALUES (8888, 'Software Engineer', 100000, $1) RETURNING *",
       [TEST_DATA.currentCompany.handle]
     );
     TEST_DATA.jobId = newJob.rows[0].id;

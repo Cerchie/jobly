@@ -3,6 +3,7 @@
 DROP TABLE IF EXISTS companies CASCADE;
 DROP TABLE IF EXISTS jobs;
 DROP TABLE IF EXISTS users;
+
 CREATE TABLE companies (
   handle text PRIMARY KEY,
   name text NOT NULL,

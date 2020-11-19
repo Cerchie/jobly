@@ -49,8 +49,6 @@ class Job {
                 FROM jobs 
                 WHERE id = $1`, [id]);
     
-
-
                 const job = jobRes.rows[0];
 
                 if (!job) {
@@ -79,19 +77,13 @@ class Job {
       static async create(data) {
         const result = await db.query(
           `INSERT INTO jobs (title, salary, equity, company_handle) 
-             VALUES ($1, $2, $3, $4) 
-             RETURNING  id, title, salary, equity, company_handle`,
-          [
-            data.title,
-            data.salary,
-            data.equity,
-            data.company_handle
-          ]
+            VALUES ($1, $2, $3, $4) 
+            RETURNING id, title, salary, equity, company_handle`,
+          [data.title, data.salary, data.equity, data.company_handle]
         );
     
         return result.rows[0];
       }
-    
       /** Update data with matching ID to data, return updated job.
        * {id, title,salary, equity, company_handle, }
        *
