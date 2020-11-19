@@ -57,30 +57,27 @@ VALUES (
     'https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png'
 );
 
-INSERT INTO jobs (id, title, salary, equity, company_handle, date_posted)
+INSERT INTO jobs (id, title, salary, equity, company_handle)
 VALUES (    
   999,
   'Pear Polisher',
     34000,
     .4,
-    'Pear',
-    '2020-09-09'
+    'Pear'
 ),
  (    
   998,
   'Apple Polisher',
     34000,
     .3,
-    'Apple',
-    '2020-08-08'
+    'Apple'
 ),
 (    
   997,
   'Peach Polisher',
     34000,
     .2,
-    'Peach',
-    '2020-07-07'
+    'Peach'
 );
 
 INSERT INTO users (username, password, first_name, last_name, email, photo_url, is_admin)
