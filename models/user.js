@@ -110,20 +110,33 @@ class User {
 
 /** Authenticate: is this username/password valid? Returns boolean. */
 
-static async authenticate(username, password) {
-   
-  const result = await db.query(
-    "SELECT password FROM users WHERE username = $1",
-    [username]);
-  let user = result.rows[0];
-  if (user) {
-    if (await bcrypt.compare(password, user.password) === true) {
-      return true;
+  static async authenticate(data) {
+    // try to find the user first
+    const result = await db.query(
+      `SELECT username, 
+              password, 
+              first_name, 
+              last_name, 
+              email, 
+              photo_url, 
+              is_admin
+        FROM users 
+        WHERE username = $1`,
+      [data.username]
+    );
+
+    const user = result.rows[0];
+
+    if (user) {
+      // compare hashed password to a new hash from password
+      const isValid = await bcrypt.compare(data.password, user.password);
+      if (isValid) {
+        return user;
+      }
     }
-} else {
-  return false;
-}
-}
+
+    throw ExpressError("Invalid Password", 401);
+  }
 
 } 
 

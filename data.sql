@@ -11,13 +11,13 @@ CREATE TABLE companies (
   logo_url text
 );
 
-CREATE TABLE jobs (
-  id INTEGER PRIMARY KEY,
-  title TEXT NOT NULL,
-  salary FLOAT NOT NULL,
-  equity FLOAT NOT NULL CHECK (equity < 1),
-  company_handle TEXT NOT NULL REFERENCES companies ON DELETE CASCADE,
-  date_posted DATE DEFAULT NOW() 
+
+CREATE TABLE jobs(
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    salary FLOAT,
+    equity FLOAT CHECK(equity <= 1.0),
+    company_handle TEXT NOT NULL REFERENCES companies ON DELETE CASCADE
 );
 
 CREATE TABLE users (
