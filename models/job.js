@@ -45,8 +45,7 @@ class Job {
                     title,
                     salary,
                     equity,
-                    company_handle,
-                    date_posted
+                    company_handle
                 FROM jobs 
                 WHERE id = $1`, [id]);
     
@@ -59,24 +58,23 @@ class Job {
 
       /** create job in database from data, return job data:
        *
-       * { id, title,salary, equity, company_handle, date_posted}
+       * { id, title,salary, equity, company_handle
        *
-       * => {id, title,salary, equity, company_handle, date_posted}
+       * => {id, title,salary, equity, company_handle}
        *
        * */
     
       static async create(data) {
         const result = await db.query(
-          `INSERT INTO jobs (id, title, salary, equity, company_handle, date_posted) 
+          `INSERT INTO jobs (id, title, salary, equity, company_handle) 
              VALUES ($1, $2, $3, $4, $5, $6) 
-             RETURNING  id, title, salary, equity, company_handle, date_posted`,
+             RETURNING  id, title, salary, equity, company_handle`,
           [
             data.id,
             data.title,
             data.salary,
             data.equity,
-            data.company_handle,
-            data.date_posted
+            data.company_handle
           ]
         );
     
@@ -84,9 +82,9 @@ class Job {
       }
     
       /** Update data with matching ID to data, return updated job.
-       * {id, title,salary, equity, company_handle, date_posted}
+       * {id, title,salary, equity, company_handle, }
        *
-{id, title,salary, equity, company_handle, date_posted}
+{id, title,salary, equity, company_handle, }
        *
        * */
     
