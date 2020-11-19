@@ -134,13 +134,13 @@ describe('PATCH /companies/:handle', function() {
 });
 
 describe('DELETE /companies/:handle', function() {
-  test('Deletes a single a company', async function() {
+  test('Deletes a single  company', async function() {
     const response = await request(app)
       .delete(`/companies/${TEST_DATA.currentCompany.handle}`)
       .send({
         _token: TEST_DATA.userToken
       });
-    expect(response.body).toEqual({ message: 'Company deleted' });
+    expect(response.body).toEqual({ message: 'company deleted' });
   });
 
   test('Responds with a 404 if it cannot find the company in question', async function() {
