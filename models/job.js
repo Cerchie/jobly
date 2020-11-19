@@ -1,6 +1,6 @@
 const db = require("../db");
 const sqlForPartialUpdate = require("../helpers/partialUpdate.js")
-
+const ExpressError = require("../helpers/ExpressError");
 /** Collection of related methods for jobs. */
 
 class Job {
@@ -49,13 +49,25 @@ class Job {
                 FROM jobs 
                 WHERE id = $1`, [id]);
     
-        if (jobRes.rows.length === 0) {
-          throw { message: `There is no job with id '${id}`, status: 404 }
-        }
-    
-        return jobRes.rows[0];
-      }
 
+
+                const job = jobRes.rows[0];
+
+                if (!job) {
+                  throw new ExpressError(`There exists no job '${id}'`, 404);
+                }
+            
+                const companiesRes = await db.query(
+                  `SELECT name, num_employees, description, logo_url 
+                    FROM companies 
+                    WHERE handle = $1`,
+                  [job.company_handle]
+                );
+            
+                job.company = companiesRes.rows[0];
+            
+                return job;
+              }
       /** create job in database from data, return job data:
        *
        * { id, title,salary, equity, company_handle
@@ -66,11 +78,10 @@ class Job {
     
       static async create(data) {
         const result = await db.query(
-          `INSERT INTO jobs (id, title, salary, equity, company_handle) 
-             VALUES ($1, $2, $3, $4, $5) 
+          `INSERT INTO jobs (title, salary, equity, company_handle) 
+             VALUES ($1, $2, $3, $4) 
              RETURNING  id, title, salary, equity, company_handle`,
           [
-            data.id,
             data.title,
             data.salary,
             data.equity,
