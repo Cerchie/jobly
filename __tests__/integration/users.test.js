@@ -26,7 +26,7 @@ afterAll(async function() {
   await afterAllHook();
 });
 //testing post to users
-describe('POST /users', async function() {
+describe('POST /users', function() {
   test('Creates a new user', async function() {
     let dataObj = {
       username: 'whiskey',
@@ -48,7 +48,7 @@ describe('POST /users', async function() {
 
 });
 ///testing post to users
-describe("POST /users", async function () {
+describe("POST /users", function () {
   test("Creates a new user", async function () {
     const response = await request(app)
         .post(`/users`)
@@ -66,7 +66,7 @@ describe("POST /users", async function () {
   }); });
 
 ///testing get to companies
-describe("GET /users/:handle", async function () {
+describe("GET /users/:handle", function () {
     test("Gets a single company", async function () {
       const response = await request(app).get(`/users/${TEST_DATA.currentCompany.handle}`).send({_token: TEST_DATA.userToken});
       expect(response.body.user).toHaveProperty("handle");
@@ -81,7 +81,7 @@ describe("GET /users/:handle", async function () {
     });
   });
 
-  describe("GET /companies", async function () {
+  describe("GET /companies", function () {
     test("Gets a list of 1 company", async function () {
       const response = await request(app).get(`/companies`);
       const companies = response.body.companies;
@@ -111,7 +111,7 @@ describe("GET /users/:handle", async function () {
   });
 
 ///testing patch to companies
-describe("PATCH /companies/:handle", async function () {
+describe("PATCH /companies/:handle", function () {
     test("Updates a single a company's title", async function () {
       const response = await request(app)
           .patch(`/companies/${TEST_DATA.currentCompany.handle}`)
@@ -157,7 +157,7 @@ describe("PATCH /companies/:handle", async function () {
   
 ///testing delete to companies
 
-describe("DELETE /companies/:handle", async function () {
+describe("DELETE /companies/:handle", function () {
     test("Deletes a single company", async function () {
       const response = await request(app)
           .delete(`/companies/${TEST_DATA.currentCompany.handle}`).send({_token: TEST_DATA.userToken})
