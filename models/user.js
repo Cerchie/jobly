@@ -17,22 +17,21 @@ class User {
         username,
         first_name, 
         last_name, 
-        email
+        email,
             FROM users 
             ORDER BY username`);
 
     return usersRes.rows;
   }
+
 //method for finding one user by username
     static async findOne(username) {
         const userRes = await db.query(
             `SELECT
             username,
             first_name, 
-            last_name, 
-            email, 
-            photo_url, 
-            is_admin
+            last_name,
+            photo_url
                 FROM users 
                 WHERE username = $1`, [username]);
     
@@ -41,6 +40,10 @@ class User {
         }
         const user = userRes.rows[0];
     
+        if (!user) {
+          throw new ExpressError(`There exists no user '${username}'`, 404);
+        }
+
         return user;
       }
 
@@ -53,18 +56,18 @@ class User {
        * */
     
       static async create(data) {
+        const hashedPassword = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
         const result = await db.query(
-          `INSERT INTO users (username, password, first_name, last_name, email, photo_url, is_admin) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7) 
-             RETURNING username, password, first_name, last_name, email, photo_url, is_admin`,
+          `INSERT INTO users (username, password, first_name, last_name, email, photo_url) 
+             VALUES ($1, $2, $3, $4, $5, $6) 
+             RETURNING username, password, first_name, last_name, email, photo_url`,
           [
             data.username,
-            data.password,
+            hashedPassword,
             data.first_name,
             data.last_name,
             data.email,
-            data.photo_url,
-            data.is_admin
+            data.photo_url
           ]
         );
     

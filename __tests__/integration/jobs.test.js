@@ -10,10 +10,7 @@ const {
   beforeEachHook,
   afterAllHook
 } = require("./config");
-console.log(  TEST_DATA,
-  afterEachHook,
-  beforeEachHook,
-  afterAllHook)
+
 
 beforeEach(async () => {
   await beforeEachHook(TEST_DATA);
