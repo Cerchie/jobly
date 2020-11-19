@@ -68,9 +68,5 @@
         ]
       }
     },
-    "required": [
-      "name",
-      "handle"
-    ],
     "additionalProperties": false
   }
