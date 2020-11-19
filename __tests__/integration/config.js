@@ -2,7 +2,7 @@
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const jwt_decode = require('jwt-decode');
+
 // app imports
 const app = require('../../app');
 const db = require('../../db');

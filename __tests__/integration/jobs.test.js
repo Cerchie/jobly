@@ -85,7 +85,7 @@ describe("GET /jobs", function () {
 
 
 describe("GET /jobs/:id", function () {
-  test("Gets a single a job", async function () {
+  test("Gets a single job", async function () {
     const response = await request(app).get(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken});
     expect(response.body.job).toHaveProperty("id");
 
