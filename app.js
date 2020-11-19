@@ -16,7 +16,7 @@ const morgan = require("morgan");
 app.use("/companies", companyRoutes)
 app.use("/jobs", jobRoutes)
 app.use("/users", userRoutes)
-app.use("/login", authRoutes)
+
 
 
 

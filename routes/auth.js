@@ -1,32 +1,18 @@
+/** Routes for authentication. */
 
-const ExpressError = require("../helpers/expressError");
-const User = require("../models/user")
-const jwt = require("jsonwebtoken");
-const Router = require("express").Router;
-const router = new Router();
-const {SECRET_KEY} = require("../config");
+const User = require("../models/User");
+const express = require("express");
+const router = new express.Router();
+const createToken = require("../helpers/createToken");
 
+router.post("/login", async function(req, res, next) {
+  try {
+    const user = await User.authenticate(req.body);
+    const token = createToken(user);
+    return res.json({ token });
+  } catch (err) {
+    return next(err);
+  }
+});
 
-/** POST /login - login: {username, password} => {token}
- *
- * Make sure to update their last-login!
- *
- **/
-
-    router.post("/", async function (req, res, next) {
-        try {
-          let {username, password} = req.body;
-          if (await User.authenticate(username, password)) {
-            let token = jwt.sign({username}, SECRET_KEY);
-            return res.json({token});
-          } else {
-            throw new ExpressError("Invalid username/password", 400);
-          }
-        }
-      
-        catch (err) {
-          return next(err);
-        }
-      });
-
-      module.exports = router;
+module.exports = router;
