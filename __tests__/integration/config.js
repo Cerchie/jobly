@@ -38,14 +38,14 @@ async function beforeEachHook(TEST_DATA) {
 
     // do the same for company "companies"
     const result = await db.query(
-      'INSERT INTO companies (handle, name, num_employees) VALUES ($1, $2, $3) RETURNING *',
+      `INSERT INTO companies (handle, name, num_employees) VALUES ($1, $2, $3) RETURNING *`,
       ['rithm', 'rithm inc', 1000]
     );
 
     TEST_DATA.currentCompany = result.rows[0];
 
     const newJob = await db.query(
-      "INSERT INTO jobs (id, title, salary, company_handle) VALUES (8888, 'Software Engineer', 100000, $1) RETURNING *",
+      `INSERT INTO jobs (id, title, salary, equity, company_handle) VALUES (8888, 'Software Engineer', 100000, .01, $1) RETURNING *`,
       [TEST_DATA.currentCompany.handle]
     );
     TEST_DATA.jobId = newJob.rows[0].id;
