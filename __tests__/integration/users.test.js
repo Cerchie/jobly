@@ -47,66 +47,20 @@ describe('POST /users', function() {
   }); 
 
 });
-///testing post to users
-describe("POST /users", function () {
-  test("Creates a new user", async function () {
-    const response = await request(app)
-        .post(`/users`)
-        .send({
-          _token: TEST_DATA.userToken,
-          handle: TEST_DATA.currentCompany.handle,
-          name: "TestComp2",
-          num_employees: 1000000,
-          description: "testingcomp2",
-          logo_url: "logourlsforcomp2"
-        });
-    expect(response.statusCode).toBe(201);
-    expect(response.body.user).toHaveProperty("handle");
-    expect(response.body.user).toHaveProperty("name");
-  }); });
 
-///testing get to companies
-describe("GET /users/:handle", function () {
-    test("Gets a single company", async function () {
-      const response = await request(app).get(`/users/${TEST_DATA.currentCompany.handle}`).send({_token: TEST_DATA.userToken});
-      expect(response.body.user).toHaveProperty("handle");
+///testing get to users
+describe("GET /users/:username", function () {
+    test("Gets a single user", async function () {
+      const response = await request(app).get(`/users/${TEST_DATA.currentUsername}`).send({_token: TEST_DATA.userToken});
+      expect(response.body.user).toHaveProperty("username");
   
-      expect(response.body.company.handle).toBe(TEST_DATA.currentCompany.handle);
+      expect(response.body.user.username).toBe(TEST_DATA.user.username);
     });
   
-    test("Responds with a 404 if it cannot find the company in question", async function () {
+    test("Responds with a 404 if it cannot find the user in question", async function () {
       const response = await request(app)
-          .get(`/companies/999`).send({_token: TEST_DATA.userToken})
+          .get(`/users/blahblah`).send({_token: TEST_DATA.userToken})
       expect(response.statusCode).toBe(404);
-    });
-  });
-
-  describe("GET /companies", function () {
-    test("Gets a list of 1 company", async function () {
-      const response = await request(app).get(`/companies`);
-      const companies = response.body.companies;
-      expect(companies).toHaveLength(1);
-      expect(companies[0]).toHaveProperty("company_handle");
-      expect(companies[0]).toHaveProperty("title");
-    });
-  
-    test("Has working search", async function () {
-      await request(app)
-          .post(`/companies`)
-          .send({
-            handle: TEST_DATA.currentCompany.handle,
-            name: TEST_DATA.currentCompany.name,
-            num_employees: TEST_DATA.currentCompany.num_employees,
-            description: TEST_DATA.currentCompany.description,
-            _token: TEST_DATA.userToken
-          });
-  
-      const response = await request(app)
-          .get(`/companies?search=${TEST_DATA.currentCompany.handle}`)
-          .send({_token: TEST_DATA.userToken});
-      expect(response.body.companies).toHaveLength(1);
-      expect(response.body.companies[0]).toHaveProperty("handle");
-      expect(response.body.companies[0]).toHaveProperty("name");
     });
   });
 
@@ -155,23 +109,32 @@ describe("PATCH /companies/:handle", function () {
     });
   });
   
-///testing delete to companies
+///testing delete to users
 
-describe("DELETE /companies/:handle", function () {
-    test("Deletes a single company", async function () {
-      const response = await request(app)
-          .delete(`/companies/${TEST_DATA.currentCompany.handle}`).send({_token: TEST_DATA.userToken})
-      expect(response.body).toEqual({message: "Company deleted"});
+describe('DELETE /users/:username', function() { //describe shows up in jest output to terminal
+    test('Deletes a single a user', async function() { //setting up function
+      const response = await request(app) //creating resp var with currUser and token input from TEST_DATA
+        .delete(`/users/${TEST_DATA.currentUsername}`)
+        .send({ _token: `${TEST_DATA.userToken}` });
+      expect(response.body).toEqual({ message: 'User deleted' }); //expect to get the right deleted msg
     });
   
+    test('Forbids a user from deleting another user', async function() {
+      const response = await request(app) //resp with vars of different user with our own user token
+        .delete(`/users/notme`)
+        .send({ _token: `${TEST_DATA.userToken}` });
+      expect(response.statusCode).toBe(401); //expect 401, not auth
+    });
   
-    test("Responds with a 404 if it cannot find the company in question", async function () {
-      // delete company first
+    test('Responds with a 404 if it cannot find the user in question', async function() {
+      // delete user first
       await request(app)
-          .delete(`/companies/${TEST_DATA.currentCompany.badhandle}`).send({_token: TEST_DATA.userToken})
-      const response = await request(app)
-          .delete(`/companies/${TEST_DATA.currentCompany.badhandle}`).send({_token: TEST_DATA.userToken})
-      expect(response.statusCode).toBe(404);
+        .delete(`/users/${TEST_DATA.currentUsername}`) //delete ourself first
+        .send({ _token: `${TEST_DATA.userToken}` });
+      const response = await request(app) //delete again
+        .delete(`/users/${TEST_DATA.currentUsername}`)
+        .send({ _token: `${TEST_DATA.userToken}` });
+      expect(response.statusCode).toBe(404); //expect 404 not found
     });
   });
   
