@@ -29,7 +29,7 @@ router.get("/", authRequired, async function(req, res, next) {
 
 router.post('/', adminRequired, async function(req, res, next) {
   try {
-    const validation = validate(req.body, jobNewSchema);
+    const validation = validate(req.body, jobSchema);
 
     if (!validation.valid) {
       throw new ExpressError(validation.errors.map(e => e.stack), 400);
