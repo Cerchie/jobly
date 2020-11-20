@@ -53,8 +53,8 @@ router.post("/", adminRequired, async function (req, res, next) {
       //Call next with error
       return next(err);
     }
-      const company = await Job.create(req.body);
-      return res.status(201).json({ company });
+      const job = await Job.create(req.body);
+      return res.status(201).json({ job  });
     } catch (err) {
       return next(err);
     }

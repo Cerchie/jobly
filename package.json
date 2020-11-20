@@ -35,5 +35,7 @@
     "pg": "^8.5.1",
     "supertest": "^6.0.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jest-environment-node-debug": "^2.0.0"
+  }
 }

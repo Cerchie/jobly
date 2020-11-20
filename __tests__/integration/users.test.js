@@ -150,10 +150,10 @@ describe('PATCH /users/:username', function() {
 });
 
 describe('DELETE /users/:username', function() {
-  test('Deletes a single a user', async function() {
+  test('Deletes a single user', async function() {
     const response = await request(app)
-      .delete(`/users/${TEST_DATA.currentUsername}`)
-      .send({ _token: `${TEST_DATA.userToken}` });
+      .send({ _token: `${TEST_DATA.userToken}` })
+      .delete(`/users/${TEST_DATA.currentUsername}`);
     expect(response.body).toEqual({ message: 'User deleted' });
   });
 
