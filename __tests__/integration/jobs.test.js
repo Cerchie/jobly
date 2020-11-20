@@ -22,13 +22,13 @@ describe("POST /jobs",function () {
     const response = await request(app)
         .post(`/jobs`)
         .send({
-          id: 7777,
           title: "SoftwareEngineerest",
           salary: 1000000,
+          company_handle: TEST_DATA.currentCompany.handle,
           equity: 0.2,
           _token: TEST_DATA.userToken
         });
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("title");
     expect(response.statusCode).toBe(201);
     
   });
