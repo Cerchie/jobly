@@ -71,7 +71,7 @@ class Job {
        * => {id, title,salary, equity, company_handle}
        *
        * */
-    
+
       static async create(data) {
         const result = await db.query(
           `INSERT INTO jobs (title, salary, equity, company_handle) 

@@ -9,26 +9,13 @@ const ExpressError = require("../helpers/expressError")
 
 const patchJobSchema = require("../schemas/patchJobs.json")
 const {ensureLoggedIn, authRequired, adminRequired} = require("../middleware/auth");
-/**
- * This route should list all the titles and company handles for all jobs, ordered by the most recently posted jobs. It should also allow for the following query string parameters
+const { debug } = require("console");
 
-search: If the query string parameter is passed, a filtered list of titles
- and company handles should be displayed based on the search term and if the job title includes it.
-
-
-min_salary: If the query string parameter is passed, titles and company handles 
-should be displayed that have a salary greater than the value of the query string parameter.
-
-
-min_equity: If the query string parameter is passed, a list of titles and 
-company handles should be displayed that have an equity greater than the value of the query string parameter.
-It should return JSON of {jobs: [job, ...]}
-*/
 
 router.get("/", authRequired, async function(req, res, next) {
     try {
     
-      const jobs = await Job.findAll(req.query);
+      const jobs = await Job.findAll(req.query); debugger
       return res.json({jobs});
     }
   
@@ -40,25 +27,20 @@ router.get("/", authRequired, async function(req, res, next) {
 
 /** POST /   jobData => {job: newJob}  */
 
-router.post("/", adminRequired, async function (req, res, next) {
-    try {
-        // Validate req.body against our job schema:
-    const result = validate(req.body, jobSchema);
-  
-    // If it's not valid...
-    if (!result.valid) {
-      //Collect all the errors in an array
-      const listOfErrors = result.errors.map(e => e.stack);
-      const err = new ExpressError(listOfErrors, 400);
-      //Call next with error
-      return next(err);
+router.post('/', adminRequired, async function(req, res, next) {
+  try {
+    const validation = validate(req.body, jobNewSchema);
+
+    if (!validation.valid) {
+      throw new ExpressError(validation.errors.map(e => e.stack), 400);
     }
-      const job = await Job.create(req.body);
-      return res.status(201).json({ job  });
-    } catch (err) {
-      return next(err);
-    }
-  });
+
+    const job = await Job.create(req.body);
+    return res.status(201).json({ job });
+  } catch (err) {
+    return next(err);
+  }
+});
 
   /** GET/ jobData => {job: jobByID} */
   router.get("/:id", authRequired, async function (req,res,next){
@@ -75,7 +57,7 @@ router.post("/", adminRequired, async function (req, res, next) {
   /** PATCH/ jobData => {job: patchedJob */
   router.patch("/:id", adminRequired, async function (req,res,next){
     try {
-  // Validate req.body against our company schema:
+  // Validate req.body against our job schema:
   const result = validate(req.body, patchJobSchema);
   
   // If it's not valid...

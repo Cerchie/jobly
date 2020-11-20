@@ -21,15 +21,17 @@ describe("POST /jobs",function () {
   test("Creates a new job", async function () {
     const response = await request(app)
         .post(`/jobs`)
+        .set('authorization', `${TEST_DATA.userToken}`)
         .send({
           _token: TEST_DATA.userToken,
-          company_handle: TEST_DATA.currentCompany.handle,
           title: "SoftwareEngineerest",
+          company_handle: TEST_DATA.currentCompany.handle,
           salary: 1000000,
           equity: 0.2
         });
-    expect(response.statusCode).toBe(201);
     expect(response.body.job).toHaveProperty("id");
+    expect(response.statusCode).toBe(201);
+    
   });
 
 

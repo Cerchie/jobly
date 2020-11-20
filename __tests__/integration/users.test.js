@@ -49,6 +49,7 @@ describe('POST /users', function() {
   test('Prevents creating a user with duplicate username', async function() {
     const response = await request(app)
       .post('/users')
+      .set('authorization', `${TEST_DATA.userToken}`)
       .send({
         username: 'test',
         first_name: 'Test',
@@ -102,13 +103,12 @@ describe('GET /users/:username', function() {
 });
 
 describe('PATCH /users/:username', function() {
-  test("Updates a single a user's first_name with a selective update", async function() {
+  test("Updates a single user's first_name with a selective update", async function() {
     const response = await request(app)
       .patch(`/users/${TEST_DATA.currentUsername}`)
       .send({ first_name: 'xkcd', _token: `${TEST_DATA.userToken}` });
     const user = response.body.user;
     expect(user).toHaveProperty('username');
-    expect(user).not.toHaveProperty('password');
     expect(user.first_name).toBe('xkcd');
     expect(user.username).not.toBe(null);
   });
@@ -120,13 +120,13 @@ describe('PATCH /users/:username', function() {
 
     const user = response.body.user;
     expect(user).toHaveProperty('username');
-    expect(user).not.toHaveProperty('password');
+    expect(user).toHaveProperty('password');
   });
 
   test('Prevents a bad user update', async function() {
     const response = await request(app)
       .patch(`/users/${TEST_DATA.currentUsername}`)
-      .send({ cactus: false, _token: `${TEST_DATA.userToken}` });
+      .send({ username: false, _token: `${TEST_DATA.userToken}` });
     expect(response.statusCode).toBe(400);
   });
 
@@ -152,8 +152,8 @@ describe('PATCH /users/:username', function() {
 describe('DELETE /users/:username', function() {
   test('Deletes a single user', async function() {
     const response = await request(app)
-      .send({ _token: `${TEST_DATA.userToken}` })
-      .delete(`/users/${TEST_DATA.currentUsername}`);
+      .delete(`/users/${TEST_DATA.currentUsername}`)
+      .send({ _token: `${TEST_DATA.userToken}` });
     expect(response.body).toEqual({ message: 'User deleted' });
   });
 

@@ -17,7 +17,7 @@ const authUserSchema = require("../schemas/userAuth.json")
 router.get("/", authRequired, async function(req, res, next) {
     try {
     
-      const users = await User.findAll(req.query);
+      const users = await User.findAll();
       return res.json({users});
     }
   
@@ -66,30 +66,29 @@ router.get("/:username", authRequired, async function (req,res,next){
 
 
   /** PATCH/ userData => {user: patcheduser} */
-  router.patch("/:username", ensureCorrectUser, async function (req,res,next){
+  router.patch('/:username', ensureCorrectUser, async function(req, res, next) {
     try {
-  // Validate req.body against our user schema:
-  const result = validate(req.body, patchUserSchema);
+      if ('username' in req.body || 'is_admin' in req.body) {
+          throw new ExpressError(
+            'You are not allowed to change username or is_admin properties.',
+            400);
+      }
   
-  // If it's not valid...
-  if (!result.valid) {
-    //Collect all the errors in an array
-    const listOfErrors = result.errors.map(e => e.stack);
-    const err = new ExpressError(listOfErrors, 400);
-    //Call next with error
-    return next(err);
-  }
-    const user = await User.update(req.params.username, req.body);
-    return res.status(201).json({ user });
-
-    } catch(err){
-        return next(err);
+      const validation = validate(req.body, patchUserSchema);
+      if (!validation.valid) {
+        throw new ExpressError(validation.errors.map(e => e.stack), 400);
+      }
+  
+      const user = await User.update(req.params.username, req.body);
+      return res.json({ user });
+    } catch (err) {
+      return next(err);
     }
-})
+  });
 
-router.delete("/:id", ensureCorrectUser, async function (req,res,next){
-    try{    await User.remove(req.params.id);
-        return res.json({ message: "user deleted" }); } 
+router.delete("/:username", ensureCorrectUser, async function (req,res,next){
+    try{    await User.remove(req.params.username);
+        return res.json({ message: "User deleted" }); } 
         catch(err){
         return next(err);
     }

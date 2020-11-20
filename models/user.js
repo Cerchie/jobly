@@ -3,7 +3,7 @@ const sqlForPartialUpdate = require("../helpers/partialUpdate.js")
 const bcrypt = require("bcrypt");
 /** Collection of related methods for users. */
 const BCRYPT_WORK_FACTOR = 10;
-
+const ExpressError = require("../helpers/expressError")
 class User {
 
   /** Return array of user data:
@@ -18,7 +18,7 @@ class User {
         username,
         first_name, 
         last_name, 
-        email,
+        email
             FROM users 
             ORDER BY username`);
 
@@ -56,7 +56,7 @@ class User {
        *
        * */
     
-      static async create(data) {
+    static async create(data) {
         const duplicateCheck = await db.query(
           `SELECT username 
             FROM users 
