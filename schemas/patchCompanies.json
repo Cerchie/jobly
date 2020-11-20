@@ -66,6 +66,15 @@
         "examples": [
           "https://freeiconshop.com/wp-content/uploads/edd/pear-outline-filled.png"
         ]
+      },
+      "_token": {
+        "$id": "/properties/token",
+        "type": "string",
+        "title": "The Token Schema ",
+        "default": "",
+        "examples": [
+          "foo123"
+        ]
       }
     },
     "required": [

@@ -17,7 +17,7 @@ beforeEach(async () => {
 });
 
 
-describe("POST /jobs", function () {
+describe("POST /jobs", async function () {
   test("Creates a new job", async function () {
     const response = await request(app)
         .post(`/jobs`)
@@ -31,6 +31,7 @@ describe("POST /jobs", function () {
     expect(response.statusCode).toBe(201);
     expect(response.body.job).toHaveProperty("id");
   });
+
 
   test("Prevents creating a job without required title field", async function () {
     const response = await request(app)
@@ -79,7 +80,7 @@ describe("GET /jobs", function () {
         .get("/jobs?search=web+dev")
         .send({_token: TEST_DATA.userToken});
     expect(response.body.jobs).toHaveLength(1);
-    expect(response.body.jobs[0]).toHaveProperty("company_handle");
+    expect(response.body.jobs[0]).toHaveProperty("id");
     expect(response.body.jobs[0]).toHaveProperty("title");
   });
 });
@@ -125,7 +126,7 @@ describe("PATCH /jobs/:id", function () {
     const response = await request(app)
         .patch(`/jobs/${TEST_DATA.jobId}`)
         .send({
-          _token: TEST_DATA.userToken, cactus: false
+          _token: TEST_DATA.userToken, title: false
         });
     expect(response.statusCode).toBe(400);
   });

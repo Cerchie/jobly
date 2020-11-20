@@ -28,13 +28,13 @@ describe('POST /companies', function() {
     expect(response.body.company).toHaveProperty('handle');
   });
 
-  test('Prevents creating a company with duplicate handle', async function() {
+  test('Prevents creating a company with bad request', async function() {
     const response = await request(app)
       .post('/companies')
       .send({
         _token: TEST_DATA.userToken,
         handle: 'rithm',
-        name: 'Test'
+        nam: 'Test'
       });
     expect(response.statusCode).toBe(400);
   });
@@ -93,7 +93,7 @@ describe('GET /companies/:handle', function() {
       .send({
         _token: TEST_DATA.userToken
       });
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(404);
   });
 });
 
