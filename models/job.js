@@ -39,33 +39,31 @@ class Job {
         return jobsRes.rows;
       }
 
-    static async findOne(id) {
+      static async findOne(id) {
         const jobRes = await db.query(
-            `SELECT id,
-                    title,
-                    salary,
-                    equity,
-                    company_handle
-                FROM jobs 
-                WHERE id = $1`, [id]);
+          `SELECT id, title, salary, equity, company_handle 
+            FROM jobs 
+            WHERE id = $1`,
+          [id]
+        );
     
-                const job = jobRes.rows[0];
-
-                if (!job) {
-                  throw new ExpressError(`There exists no job '${id}'`, 404);
-                }
-            
-                const companiesRes = await db.query(
-                  `SELECT name, num_employees, description, logo_url 
-                    FROM companies 
-                    WHERE handle = $1`,
-                  [job.company_handle]
-                );
-            
-                job.company = companiesRes.rows[0];
-            
-                return job;
-              }
+        const job = jobRes.rows[0];
+    
+        if (!job) {
+          throw new ExpressError(`There exists no job '${id}'`, 404);
+        }
+    
+        const companiesRes = await db.query(
+          `SELECT name, num_employees, description, logo_url 
+            FROM companies 
+            WHERE handle = $1`,
+          [job.company_handle]
+        );
+    
+        job.company = companiesRes.rows[0];
+    
+        return job;
+      }
       /** create job in database from data, return job data:
        *
        * { id, title,salary, equity, company_handle

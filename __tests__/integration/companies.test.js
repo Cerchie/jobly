@@ -87,13 +87,13 @@ describe('GET /companies/:handle', function() {
     expect(response.body.company.handle).toBe('rithm');
   });
 
-  test('Responds with a 404 if it cannot find the company in question', async function() {
+  test('Responds with an error if it cannot find the company in question', async function() {
     const response = await request(app)
       .get(`/companies/yaaasss`)
       .send({
         _token: TEST_DATA.userToken
       });
-    expect(response.statusCode).toBe(404);
+    expect(response.statusCode).toBe(400);
   });
 });
 

@@ -45,7 +45,7 @@ router.post("/", adminRequired, async function (req, res, next) {
     // If it's not valid...
     if (!result.valid) {
       //Collect all the errors in an array
-      throw new ExpressError(validation.errors.map(e => e.stack), 400);
+      throw new ExpressError(result.errors.map(e => e.stack), 400);
  
     }
       const company = await Company.create(req.body);

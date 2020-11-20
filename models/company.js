@@ -1,6 +1,6 @@
 const db = require("../db");
 const sqlForPartialUpdate = require("../helpers/partialUpdate.js")
-
+const ExpressError = require("../helpers/expressError");
 /** Collection of related methods for companies. */
 
 class Company {

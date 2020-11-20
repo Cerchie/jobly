@@ -150,7 +150,7 @@ describe("DELETE /jobs/:id", function () {
   test("Deletes a single a job", async function () {
     const response = await request(app)
         .delete(`/jobs/${TEST_DATA.jobId}`).send({_token: TEST_DATA.userToken})
-    expect(response.body).toEqual({message: "Job deleted"});
+    expect(response.body).toEqual({message: "job deleted"});
   });
 
 
