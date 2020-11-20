@@ -169,6 +169,7 @@ describe('DELETE /users/:username', function() {
     await request(app)
       .delete(`/users/${TEST_DATA.currentUsername}`)
       .send({ _token: `${TEST_DATA.userToken}` });
+      
     const response = await request(app)
       .delete(`/users/${TEST_DATA.currentUsername}`)
       .send({ _token: `${TEST_DATA.userToken}` });

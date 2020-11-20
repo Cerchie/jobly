@@ -12,7 +12,9 @@ const userSchema = require("../schemas/users.json")
 const {authRequired, adminRequired, ensureCorrectUser} = require("../middleware/auth");
 const {SECRET_KEY} = require("../config");
 const jwt = require("jsonwebtoken");
-router.get("/", async function(req, res, next) {
+const authUserSchema = require("../schemas/userAuth.json")
+
+router.get("/", authRequired, async function(req, res, next) {
     try {
     
       const users = await User.findAll(req.query);
@@ -50,7 +52,7 @@ router.post("/", async function (req, res, next) {
   });
 
   /** GET/ userData => user: userByUsername} */
-router.get("/:username", async function (req,res,next){
+router.get("/:username", authRequired, async function (req,res,next){
     try {
         const username = req.params.username;
         const user = await User.findOne(username);

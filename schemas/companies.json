@@ -41,5 +41,5 @@
       ]
     }
   },
-  "required": ["name", "handle"]
+  "required": [ "handle"]
 }

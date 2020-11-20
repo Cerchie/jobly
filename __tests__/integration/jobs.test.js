@@ -17,14 +17,14 @@ beforeEach(async () => {
 });
 
 
-describe("POST /jobs", async function () {
+describe("POST /jobs",function () {
   test("Creates a new job", async function () {
     const response = await request(app)
         .post(`/jobs`)
         .send({
           _token: TEST_DATA.userToken,
           company_handle: TEST_DATA.currentCompany.handle,
-          title: "Software Engineer in Test",
+          title: "SoftwareEngineerest",
           salary: 1000000,
           equity: 0.2
         });
@@ -38,6 +38,7 @@ describe("POST /jobs", async function () {
         .post(`/jobs`)
         .send({
           _token: TEST_DATA.userToken,
+          id: 7777777,
           salary: 1000000,
           equity: 0.2,
           company_handle: TEST_DATA.currentCompany.handle
@@ -48,12 +49,17 @@ describe("POST /jobs", async function () {
 
 
 describe("GET /jobs", function () {
-  test("Gets a list of 1 job", async function () {
-    const response = await request(app).get(`/jobs`);
-    const jobs = response.body.jobs;
-    expect(jobs).toHaveLength(1);
-    expect(jobs[0]).toHaveProperty("company_handle");
-    expect(jobs[0]).toHaveProperty("title");
+  test("Gets a list of jobs", async function () {
+    const response = await request(app)
+    .get(`/jobs`)
+    .set('authorization', `${TEST_DATA.userToken}`)
+    .send({
+      _token: TEST_DATA.userToken
+    });
+    const jobs = response.body;
+
+    expect(jobs).toHaveProperty("jobs");
+
   });
 
   test("Has working search", async function () {

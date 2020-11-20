@@ -45,32 +45,31 @@ class Company {
         return companiesRes.rows;
       }
 
-    static async findOne(handle) {
+      static async findOne(handle) {
         const companyRes = await db.query(
-            `SELECT handle,
-                    name,
-                    num_employees,
-                    description,
-                    logo_url
-                FROM companies 
-                WHERE handle = $1`, [handle]);
+          `SELECT handle, name, num_employees, description, logo_url
+                FROM companies
+                WHERE handle = $1`,
+          [handle]
+        );
     
-                const company = companyRes.rows[0];
-
-                if (!company) {
-                  throw new ExpressError(`There exists no company '${handle}'`, 404);
-                }
-            
-                const jobsRes = await db.query(
-                  `SELECT id, title, salary, equity
-                        FROM jobs 
-                        WHERE company_handle = $1`,
-                  [handle]
-                );
-            
-                company.jobs = jobsRes.rows;
-            
-                return company; }
+        const company = companyRes.rows[0];
+    
+        if (!company) {
+          throw new ExpressError(`There exists no company '${handle}'`, 404);
+        }
+    
+        const jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+                FROM jobs 
+                WHERE company_handle = $1`,
+          [handle]
+        );
+    
+        company.jobs = jobsRes.rows;
+    
+        return company;
+      }
 
       /** create company in database from data, return company data:
        *

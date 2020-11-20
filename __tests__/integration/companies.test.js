@@ -41,10 +41,15 @@ describe('POST /companies', function() {
 });
 
 describe('GET /companies', function() {
-  test('Gets a list of 1 company', async function() {
-    const response = await request(app).get('/companies');
-    expect(response.body.companies).toHaveLength(1);
-    expect(response.body.companies[0]).toHaveProperty('handle');
+  test('Gets companies list', async function() {
+    const response = await request(app)
+    .get('/companies')
+    .set('authorization', `${TEST_DATA.userToken}`)
+    .send({
+      _token: TEST_DATA.userToken
+    });
+    const companies = response.body;
+    expect(companies).toHaveProperty('companies');
   });
 
   test('Has working search', async function() {

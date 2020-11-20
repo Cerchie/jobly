@@ -22,18 +22,16 @@ If the min_employees parameter is greater than the max_employees parameter,
 respond with a 400 status and a message notifying that the parameters are incorrect.
 */
 
-router.get("/", authRequired, async function(req, res, next) {
-    try {
-    
-      const companies = await Company.findAll(req.query);
-      return res.json({companies});
-    }
-  
-    catch (err) {
-      return next(err);
-     
-    }
-  });
+/** GET /  =>  {companies: [company, company]}  */
+
+router.get('/', authRequired, async function(req, res, next) {
+  try {
+    const companies = await Company.findAll(req.query);
+    return res.json({ companies });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 /** POST /   companyData => {company: newCompany}  */
 

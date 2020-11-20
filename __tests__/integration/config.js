@@ -19,7 +19,7 @@ const TEST_DATA = {};
 async function beforeEachHook(TEST_DATA) {
   try {
     // login a user, get a token, store the user ID and token
-    const hashedPassword = await bcrypt.hash('secret', 1);
+    const hashedPassword = await bcrypt.hash('secret', 12);
     await db.query(
       `INSERT INTO users (username, password, first_name, last_name, email, is_admin)
                   VALUES ('test', $1, 'tester', 'mctest', 'test@rithmschool.com', true)`,
